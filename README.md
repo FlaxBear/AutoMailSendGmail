@@ -18,11 +18,11 @@ Not created
 ## Usage
 
 ## Install
-1.Google spreadsheet Create new
-2.Open Script Edit from the menu tool
-3.Copy and paste this program
-4.Save it
-5.Run my_auto_send_mail()
+1.Google spreadsheet Create new<br>
+2.Open Script Edit from the menu tool<br>
+3.Copy and paste this program<br>
+4.Save it<br>
+5.Run my_auto_send_mail()<br>
 
 ## Contribution
 Not created
