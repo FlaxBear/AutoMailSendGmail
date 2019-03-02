@@ -77,6 +77,88 @@ function set_trigger()
 	.inTimezone(SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone())
 	.create();
 }
+
+// 関数:isYYYYMMDDHHmmSS
+// 説明:入力値がYYYYMMSSHHmmSS形式で記述されているか
+// 入力: str 文字列
+// 出力: Boolean型 YYYYMMSSHHmmSS形式ならtrue、それ以外ならfalse
+function isYYYYMMDDHHmmSS(str){
+	//null or 14文字でない or 数値でない場合はfalse
+	if(str==null || str.length != 14 || isNaN(str)){
+	  return false;
+	}
+
+	//年,月,日,時,分,秒を取得する
+	var y = parseInt(str.substr(0,4));
+	var m = parseInt(str.substr(4,2)) -1;  //月は0～11で指定するため-1しています。
+	var d = parseInt(str.substr(6,2));
+	var h = parseInt(str.substr(8,2));
+	var mi = parseInt(str.substr(10,2));
+	var s = parseInt(str.substr(12,2));
+	var dt = new Date(y, m, d, h, mi, s);
+   
+	//判定する
+	return (y == dt.getFullYear() && m == dt.getMonth() && d == dt.getDate() && h == dt.getHours() && mi == dt.getMinutes() && s == dt.getSeconds);
+}
+
+// 関数:issue_date
+// 説明:入力値を元にdate型のデータ作成
+// 入力: var型 input_date	YYYYMMDDHHmmSS形式か
+//						   Y:1,M:1,D:1,H:1,m:1,S:1,W:1形式（これは仮)
+// 出力: Date型 output_date
+function issue_date(input_date) 
+{
+	var output_date;
+	if(isYYYYMMDDHHmmSS(input_date) == true) 
+	{
+		// YYYYMMDDHHmmSS形式ならそれを各数値を代入しdate型を作成
+		var y = parseInt(input_date.substr(0,4));
+		var m = parseInt(input_date.substr(4,2)) -1;  //月は0～11で指定するため-1しています。
+		var d = parseInt(input_date.substr(6,2));
+		var h = parseInt(input_date.substr(8,2));
+		var mi = parseInt(input_date.substr(10,2));
+		var s = parseInt(input_date.substr(12,2));
+		output_date = new Date(y, m, d, h, mi, s);
+	} 
+	else
+	{
+		// それ以外ならプログラムは関数が実行した日時を元に加算方式でdate型を作成
+		// ただし、W(曜日が指定されている場合、月日が無視される)
+		output_date = new Date();
+		if(input_date.indexOf('W') != -1) {
+			// W(曜日)が設定された場合、数値が取り出し
+			// 指定した曜日になるまで日付を加算していく
+			var w_point = input_date.indexOf('W') + 2;
+			var w = parseInt(w_point, 1);
+			while (w != output_date.getDay()) {
+				output_date.setDate(output_date.getDate() + 1);
+			}
+		} else {
+			if(input_date.indexOf('M') != -1) {
+				var m_point = input_date.indexOf('M') + 2;
+				var m = parseInt(m_point, 1);
+				output_date.setMonth(output_date.getMonth() + m);
+			}
+			if(input_date.indexOf('D') != -1) {
+				var d_point = input_date.indexOf('D') + 2;
+				var d = parseInt(d_point, 1);
+				output_date.setDate(output_date.getDate() + d);
+			}
+		}
+		if(input_date.indexOf('H') != -1) {
+			var h_point = input_date.indexOf('H') + 2;
+			var h = parseInt(h_point, 1);
+			output_date.setMonth(output_date.getMonth() + h);
+		}
+		if(input_date.indexOf('H') != -1) {
+			var h_point = input_date.indexOf('H') + 2;
+			var h = parseInt(h_point, 1);
+			output_date.setMonth(output_date.getMonth() + h);
+		}
+
+	}
+	return output_date;
+}
 // ==========================================================================================================
 
 // 関数:my_auto_send_mail
@@ -298,3 +380,5 @@ function replaceAll(str, beforeStr, afterStr){
 	var reg = new RegExp(beforeStr, "g");
 	return str.replace(reg, afterStr);
 }
+
+// ==========================================================================================================

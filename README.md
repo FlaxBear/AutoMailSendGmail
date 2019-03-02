@@ -32,3 +32,4 @@ Not created
 
 ## Author
 [Flaxbear](https://github.com/FlaxBear)
+E-mail:flaxbear.github@gmail.com
